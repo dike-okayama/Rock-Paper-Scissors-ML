@@ -55,12 +55,14 @@ export default function Play() {
   };
 
   const init = async () => {
+    console.log("init, ", webcamRef.current);
+
     if (model == null) {
       const loaded_model = await tf.loadLayersModel(MODEL + "model.json");
       setModel(loaded_model);
     }
 
-    if (webcamRef.current != null && camera == null) {
+    if (webcamRef.current != null) {
       const media = await navigator.mediaDevices.getUserMedia({
         audio: false,
         video: {
