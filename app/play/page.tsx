@@ -61,14 +61,15 @@ export default function Play() {
     }
 
     if (webcamRef.current != null && camera == null) {
-      const media = await navigator.mediaDevices.getUserMedia({
-        audio: false,
-        video: {
-          width: 224,
-          height: 224,
-        },
-      });
-      webcamRef.current.srcObject = media;
+      // const media = await navigator.mediaDevices.getUserMedia({
+      //   audio: false,
+      //   video: {
+      //     width: 224,
+      //     height: 224,
+      //   },
+      // });
+      // console.log(media);
+      // webcamRef.current.srcObject = media;
       await webcamRef.current.play();
       const loaded_camera = await tf.data.webcam(webcamRef.current);
 
