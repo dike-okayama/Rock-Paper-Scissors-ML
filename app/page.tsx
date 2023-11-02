@@ -1,12 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect, useRef } from "react";
 
 import * as tf from "@tensorflow/tfjs";
 import OptionHand from "./components/OptionHand";
-import { predictNextHand, preprocessData, train } from "./service/LSTM";
+import { perceptron, predict } from "./service/perceptron";
 
 import * as styles from "./page.css";
 
@@ -26,8 +25,6 @@ const synchronizeHands: { self: Hand | undefined; ai: Hand | undefined } = {
   self: undefined,
   ai: undefined,
 };
-
-const history: number[][] = []; // [ai, self]  // 0: rock, 1: scissors, 2: paper
 
 export default function Play() {
   const [model, setModel] = useState<tf.LayersModel>();
@@ -145,7 +142,7 @@ export default function Play() {
     } else {
       setLoseCount((prev) => prev + 1);
     }
-    history.push([HandMapping[hands.ai], HandMapping[hands.self]]);
+    perceptron(HandMapping[hands.self]);
   };
 
   // game loop
@@ -162,12 +159,8 @@ export default function Play() {
       setTimeout(() => {
         setText("ぽん！");
         let aiHand: Hand;
-        if (history.length > 5) {
-          const data = preprocessData(history);
-          train(data);
-          const prediction = predictNextHand(
-            history.slice(-3).map((h) => h[0])
-          );
+        if (history.length > 2) {
+          const prediction = predict();
           aiHand = HandList[(prediction + 2) % 3];
         } else {
           aiHand = HandList[Math.floor(Math.random() * 3)];
