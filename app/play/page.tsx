@@ -62,7 +62,7 @@ export default function Play() {
       setModel(loaded_model);
     }
 
-    if (webcamRef.current != null) {
+    if (webcamRef.current != null && camera == null) {
       const media = await navigator.mediaDevices.getUserMedia({
         audio: false,
         video: {
@@ -188,6 +188,8 @@ export default function Play() {
                     height={224}
                     width={224}
                     className={styles.video}
+                    autoPlay={true}
+                    muted={true}
                   ></video>
                 </div>
                 <div className={styles.counterContainer}>
