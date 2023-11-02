@@ -234,15 +234,17 @@ export default function Play() {
                   muted={true}
                   style={{ visibility: isPredicting ? "visible" : "hidden" }}
                 ></video>
-                <Image
-                  src={`/${selfHand}.png`}
-                  alt={selfHand || ""}
-                  height={224}
-                  width={224}
-                  className={styles.video}
-                  priority={true}
-                  style={{ visibility: isPredicting ? "hidden" : "visible" }}
-                />
+                {selfHand && (
+                  <Image
+                    src={`/${selfHand}.png`}
+                    alt={selfHand}
+                    height={224}
+                    width={224}
+                    className={styles.video}
+                    priority={true}
+                    style={{ visibility: isPredicting ? "hidden" : "visible" }}
+                  />
+                )}
               </div>
               <div className={styles.counterContainer}>
                 <p className={styles.text}>{winCount}勝</p>
