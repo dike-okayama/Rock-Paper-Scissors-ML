@@ -117,9 +117,9 @@ export default function Play() {
       const prediction = (await model?.predict(
         image.expandDims(0).toFloat().div(255)
       )) as tf.Tensor;
-      const possibility = Array.from(await prediction.data());
+      const probability = Array.from(await prediction.data());
 
-      const selfHand = HandList[possibility.indexOf(Math.max(...possibility))];
+      const selfHand = HandList[probability.indexOf(Math.max(...probability))];
       synchronizeHands.self = selfHand; // not good, but needed for useEffect
       setSelfHand(selfHand);
     };
