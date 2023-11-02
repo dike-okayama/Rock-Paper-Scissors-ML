@@ -2,22 +2,22 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
+
 import * as tf from "@tensorflow/tfjs";
-import { WebcamIterator } from "@tensorflow/tfjs-data/dist/iterators/webcam_iterator";
+import OptionHand from "./components/OptionHand";
+import { predictNextHand, preprocessData, train } from "./service/LSTM";
+
 import * as styles from "./page.css";
+
+import { WebcamIterator } from "@tensorflow/tfjs-data/dist/iterators/webcam_iterator";
+import type { Text } from "./common/types";
+import { Hand } from "./common/types";
 
 const PREDICT_INTERVAL = 100;
 
-enum Hand {
-  Rock = "rock",
-  Scissors = "scissors",
-  Paper = "paper",
-}
-
 const HandList = [Hand.Rock, Hand.Scissors, Hand.Paper];
-
-type Text = "" | "じゃんけん..." | "ぽん！";
+const HandMapping = { [Hand.Rock]: 0, [Hand.Scissors]: 1, [Hand.Paper]: 2 };
 
 // const MODEL = "https://teachablemachine.withgoogle.com/models/7l47J0nvwC/";
 const MODEL = "https://teachablemachine.withgoogle.com/models/feCZWlpVt/";
@@ -26,6 +26,8 @@ const synchronizeHands: { self: Hand | undefined; ai: Hand | undefined } = {
   self: undefined,
   ai: undefined,
 };
+
+const history: number[][] = []; // [ai, self]  // 0: rock, 1: scissors, 2: paper
 
 export default function Play() {
   const [model, setModel] = useState<tf.LayersModel>();
@@ -143,6 +145,7 @@ export default function Play() {
     } else {
       setLoseCount((prev) => prev + 1);
     }
+    history.push([HandMapping[hands.ai], HandMapping[hands.self]]);
   };
 
   // game loop
@@ -158,7 +161,17 @@ export default function Play() {
       }, 100);
       setTimeout(() => {
         setText("ぽん！");
-        const aiHand = HandList[Math.floor(Math.random() * 3)];
+        let aiHand: Hand;
+        if (history.length > 5) {
+          const data = preprocessData(history);
+          train(data);
+          const prediction = predictNextHand(
+            history.slice(-3).map((h) => h[0])
+          );
+          aiHand = HandList[(prediction + 2) % 3];
+        } else {
+          aiHand = HandList[Math.floor(Math.random() * 3)];
+        }
         synchronizeHands.ai = aiHand; // not good, but needed for useEffect
         setAIHand(aiHand);
       }, 1600);
@@ -283,21 +296,3 @@ export default function Play() {
     </>
   );
 }
-
-type OptionHandProps = {
-  name: string;
-  highlight?: boolean;
-};
-
-const OptionHand = ({ name, highlight }: OptionHandProps) => {
-  return (
-    <Image
-      src={`/${name}.png`}
-      alt={name}
-      height={100}
-      width={100}
-      className={`${styles.optionHand} ${highlight ? styles.highlight : ""}`}
-      priority={true}
-    />
-  );
-};
