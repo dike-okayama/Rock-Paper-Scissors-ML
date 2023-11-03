@@ -106,3 +106,17 @@ export const highlight = style({
   borderRadius: "50%",
   transform: "scale(1.1)",
 });
+
+export const button = style({
+  margin: "0 1rem",
+  padding: "10px",
+  borderRadius: "10px",
+  outline: "none",
+  border: "1px solid black",
+  cursor: "pointer",
+  selectors: {
+    "&:hover": {
+      backgroundColor: "lightgray",
+    },
+  },
+});

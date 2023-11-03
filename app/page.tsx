@@ -19,7 +19,8 @@ const HandList = [Hand.Rock, Hand.Scissors, Hand.Paper];
 const HandMapping = { [Hand.Rock]: 0, [Hand.Scissors]: 1, [Hand.Paper]: 2 };
 
 // const MODEL = "https://teachablemachine.withgoogle.com/models/7l47J0nvwC/";
-const MODEL = "https://teachablemachine.withgoogle.com/models/feCZWlpVt/";
+// const MODEL = "https://teachablemachine.withgoogle.com/models/feCZWlpVt/";
+const MODEL = "https://teachablemachine.withgoogle.com/models/BEJhjT2-4/";
 
 const synchronizeHands: { self: Hand | undefined; ai: Hand | undefined } = {
   self: undefined,
@@ -273,6 +274,7 @@ export default function Play() {
             onClick={() => {
               setIsPlaying(false);
             }}
+            className={styles.button}
           >
             最初から
           </button>
@@ -281,6 +283,7 @@ export default function Play() {
             onClick={() => {
               setIsPlaying(true);
             }}
+            className={styles.button}
           >
             スタート
           </button>
