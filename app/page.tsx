@@ -20,7 +20,8 @@ const HandMapping = { [Hand.Rock]: 0, [Hand.Scissors]: 1, [Hand.Paper]: 2 };
 
 // const MODEL = "https://teachablemachine.withgoogle.com/models/7l47J0nvwC/";
 // const MODEL = "https://teachablemachine.withgoogle.com/models/feCZWlpVt/";
-const MODEL = "https://teachablemachine.withgoogle.com/models/BEJhjT2-4/";
+// const MODEL = "https://teachablemachine.withgoogle.com/models/BEJhjT2-4/";
+const MODEL = "https://teachablemachine.withgoogle.com/models/Ve-r6Whid/";
 
 const synchronizeHands: { self: Hand | undefined; ai: Hand | undefined } = {
   self: undefined,
